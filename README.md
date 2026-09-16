@@ -57,5 +57,10 @@ git add lista_*.txt && git commit -s -m "Atualizar lista de pacotes"
   `scripts/colors/niri-colors.sh` (executado via `run-scripts.sh` no startup e no
   `Mod+G`). A versão versionada serve de fallback para máquinas novas antes do
   primeiro `ruwall`; depois ela é sobrescrita com as cores do wallpaper atual.
+- **Configurações de outros apps** (waybar, fuzzel, kitty, swaync, cava, etc.)
+  **não são versionadas**: as partes dinâmicas são geradas pelos scripts de cor
+  em `scripts/colors/` (ex.: `colors-waybar.css`), que regeneram os esquemas a
+  partir do wal. O repositório guarda apenas os scripts que as geram, não a
+  saída.
 - Depois de rodar `./link.sh`, os diretórios em `$HOME/.config` apontam para o
   repositório: edite os arquivos **dentro do repo** e commite.
