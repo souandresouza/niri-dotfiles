@@ -1,0 +1,8 @@
+localsend 1.18.2-1
+mpv-full 0.41.0-2
+python-pywal 3.3.0-11
+swaylock-effects 1.7.0.0-4
+wal-telegram-git r44.538ef13-1
+waybar-git 0.15.0.r1004.g6d60c8e-1
+yay-bin 13.0.1-1
+yay-bin-debug 13.0.1-1
