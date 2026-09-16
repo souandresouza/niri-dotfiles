@@ -1,6 +1,6 @@
 # niri-dotfiles
 
-Configuração do compositor Wayland **niri** e scripts de apoio (wal, wallapapers,
+Configuração do compositor Wayland **niri** e scripts de apoio (wal, wallpapers,
 notificações, etc.), sincronizados em um repositório git.
 
 ## Estrutura
