@@ -11,8 +11,8 @@
 #   ./install.sh --update-lists  Regenera lista_pacman.txt e lista_aur.txt
 #
 # As listas são geradas a partir dos pacotes instalados explicitamente:
-#   lista_pacman.txt -> pacman -Qen
-#   lista_aur.txt    -> pacman -Qem
+#   lista_pacman.txt -> pacman -Qenq
+#   lista_aur.txt    -> pacman -Qemq
 
 set -euo pipefail
 
@@ -107,11 +107,11 @@ install_aur() {
 regenerate_lists() {
     local alcunha
     log "Regenerando lista_pacman.txt..."
-    pacman -Qen | sort > "$PACMAN_LIST"
+    pacman -Qenq | sort > "$PACMAN_LIST"
 
     log "Regenerando lista_aur.txt..."
     log "   usa pacman -Qem (explicitos de repositórios estrangeiros)"
-    pacman -Qem | sort > "$AUR_LIST"
+    pacman -Qemq | sort > "$AUR_LIST"
 
     log "Listas atualizadas:"
     log "   pacman: $(wc -l < "$PACMAN_LIST") pacotes"

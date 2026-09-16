@@ -1,0 +1,6 @@
+# Backups criados pelo link.sh
+*.bak-*
+
+# Arquivos temporários
+*.tmp
+*~
