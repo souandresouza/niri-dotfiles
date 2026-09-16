@@ -1,0 +1,11 @@
+# Serviços systemd habilitados nesta configuração
+# Específicos da máquina devem ser removidos (ex.: seatd, ollama)
+bluetooth.service
+fstrim.timer
+NetworkManager.service
+NetworkManager-dispatcher.service
+ollama.service
+power-profiles-daemon.service
+sddm.service
+seatd.service
+ufw.service

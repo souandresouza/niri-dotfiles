@@ -7,7 +7,8 @@
 #   ./install.sh                 Instala pacotes oficiais + AUR
 #   ./install.sh --pacman        Instala apenas os pacotes oficiais
 #   ./install.sh --aur           Instala apenas os pacotes AUR
-#   ./install.sh --dry-run       Mostra o que seria instalado, sem instalar
+#   ./install.sh --services      Habilita os serviços de servicos.txt
+#   ./install.sh --dry-run       Mostra o que seria feito, sem alterar nada
 #   ./install.sh --update-lists  Regenera lista_pacman.txt e lista_aur.txt
 #
 # As listas são geradas a partir dos pacotes instalados explicitamente:
@@ -19,12 +20,13 @@ set -euo pipefail
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PACMAN_LIST="$REPO_DIR/lista_pacman.txt"
 AUR_LIST="$REPO_DIR/lista_aur.txt"
+SERVICES_FILE="$REPO_DIR/servicos.txt"
 
 MODE="all"
 DRY_RUN=0
 
 usage() {
-    sed -n '2,14p' "${BASH_SOURCE[0]}" | sed 's/^#//'
+    sed -n '2,15p' "${BASH_SOURCE[0]}" | sed 's/^#//'
     exit 0
 }
 
@@ -105,7 +107,6 @@ install_aur() {
 }
 
 regenerate_lists() {
-    local alcunha
     log "Regenerando lista_pacman.txt..."
     pacman -Qenq | sort > "$PACMAN_LIST"
 
@@ -118,27 +119,50 @@ regenerate_lists() {
     log "   AUR:    $(wc -l < "$AUR_LIST") pacotes"
 }
 
+install_services() {
+    local services
+    services="$(read_list "$SERVICES_FILE")"
+    [[ -z "$services" ]] && { log "Lista de serviços vazia, nada a fazer."; return; }
+
+    if [[ "$DRY_RUN" -eq 1 ]]; then
+        log "Serviços a habilitar:"
+        printf '%s\n' "$services" | sed 's/^/   - /'
+        return
+    fi
+
+    log "Habilitando serviços via systemctl..."
+    mapfile -t svc_arr <<<"$services"
+    for svc in "${svc_arr[@]}"; do
+        # 2>/dev/null para não exigir que um serviço opcional exista em toda máquina
+        sudo systemctl enable --now --quiet "$svc" || warn "Falha ao habilitar $svc"
+    done
+    log "Serviços habilitados."
+}
+
 [[ $# -gt 0 ]] || MODE="all"
 while (($#)); do
     case "$1" in
-        --pacman)    MODE="pacman" ;;
-        --aur)       MODE="aur" ;;
-        --dry-run)   DRY_RUN=1 ;;
+        --pacman)   MODE="pacman" ;;
+        --aur)      MODE="aur" ;;
+        --services) MODE="services" ;;
+        --dry-run)  DRY_RUN=1 ;;
         --update-lists|--lists) MODE="lists" ;;
-        --help|-h)   usage ;;
-        *)           err "Opção desconhecida: $1 (use --help)" ;;
+        --help|-h)  usage ;;
+        *)          err "Opção desconhecida: $1 (use --help)" ;;
     esac
     shift
 done
 
 case "$MODE" in
-    pacman) install_pacman ;;
-    aur)    install_aur ;;
-    lists)  regenerate_lists ;;
+    pacman)   install_pacman ;;
+    aur)      install_aur ;;
+    services) install_services ;;
+    lists)    regenerate_lists ;;
     *)
         [[ "$(id -u)" -eq 0 ]] && err "Não rode como root (o AUR exige usuário normal)."
         install_pacman
         install_aur
+        log "Sugestão: habilite os serviços com ./install.sh --services"
         log "Concluído. Reinicie para finalizar a configuração, se necessário."
         ;;
 esac
