@@ -10,7 +10,7 @@ binds {
     // =========================================================================
 
     // Terminal (detecta automaticamente o terminal preferido)
-    Mod+Return { spawn-sh "bash $HOME/.config/scripts/auto_detect_terminal.sh"; }
+    Mod+Return { spawn-sh "bash $HOME/.local/bin/auto_detect_terminal.sh"; }
 
     // Lançador de aplicativos
     Mod+Space { spawn "fuzzel"; }
