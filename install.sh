@@ -7,6 +7,7 @@
 #   ./install.sh                 Instala pacotes oficiais + AUR
 #   ./install.sh --pacman        Instala apenas os pacotes oficiais
 #   ./install.sh --aur           Instala apenas os pacotes AUR
+#   ./install.sh --cadrocfile    Clona/atualiza e instala o cadrocfile (meu file manager)
 #   ./install.sh --services      Habilita os serviços de servicos.txt
 #   ./install.sh --dry-run       Mostra o que seria feito, sem alterar nada
 #   ./install.sh --update-lists  Regenera lista_pacman.txt e lista_aur.txt
@@ -144,6 +145,7 @@ while (($#)); do
     case "$1" in
         --pacman)   MODE="pacman" ;;
         --aur)      MODE="aur" ;;
+        --cadrocfile) MODE="cadrocfile" ;;
         --services) MODE="services" ;;
         --dry-run)  DRY_RUN=1 ;;
         --update-lists|--lists) MODE="lists" ;;
@@ -156,6 +158,7 @@ done
 case "$MODE" in
     pacman)   install_pacman ;;
     aur)      install_aur ;;
+    cadrocfile) install_cadrocfile ;;
     services) install_services ;;
     lists)    regenerate_lists ;;
     *)
@@ -166,3 +169,45 @@ case "$MODE" in
         log "Concluído. Reinicie para finalizar a configuração, se necessário."
         ;;
 esac
+# -----------------------------------------------------------------------------
+# 13. CADROCFILE (GERENCIADOR DE ARQUIVOS)
+# -----------------------------------------------------------------------------
+install_cadrocfile() {
+    local repo_dir="$HOME/cadrocfile"
+    local cadroc_install
+
+    log "Instalando cadrocfile (meu gerenciador de arquivos)..."
+
+    if [[ -d "$repo_dir" ]]; then
+        log "Repositório cadrocfile já existe em $repo_dir"
+    else
+        if [[ "$DRY_RUN" -eq 1 ]]; then
+            log "Clonaria https://github.com/souandresouza/cadrocfile.git em $repo_dir"
+        else
+            log "Clonando https://github.com/souandresouza/cadrocfile.git..."
+            git clone --depth 1 "https://github.com/souandresouza/cadrocfile.git" "$repo_dir"
+        fi
+    fi
+
+    cadroc_install="$repo_dir/install.sh"
+    [[ -f "$cadroc_install" ]] || err "Script de instalação não encontrado: $cadroc_install"
+
+    if [[ "$DRY_RUN" -eq 1 ]]; then
+        log "Executaria: $cadroc_install (detectando binário vs source)"
+        return
+    fi
+
+    # Executa o instalador do cadrocfile. Ele detecta o sistema e
+    # instala na melhor forma (binário pré-compilado ou compila do fonte)
+    (
+        cd "$repo_dir"
+        # Usa o prefixo ~/.local por padrão para não exigir root
+        bash "$cadroc_install" --prefix "${HOME}/.local" "${ASSUME_YES:+--yes}"
+    )
+
+    if command -v cadrocfile >/dev/null 2>&1; then
+        log "cadrocfile instalado com sucesso: $(command -v cadrocfile)"
+    else
+        warn "cadrocfile pode não estar no PATH. Verifique em ~/.local/bin"
+    fi
+}

@@ -77,3 +77,49 @@ git add lista_*.txt && git commit -s -m "Atualizar lista de pacotes"
   saída.
 - Depois de rodar `./link.sh`, os diretórios em `$HOME/.config` apontam para o
   repositório: edite os arquivos **dentro do repo** e commite.
+
+## cadrocfile (gerenciador de arquivos)
+
+O [cadrocfile](https://github.com/souandresouza/cadrocfile) é o meu gerenciador de arquivos GTK4 + Libadwaita. 
+
+Ele já está mapeado no `binds.kdl` com:
+
+```kdl
+Mod+E { spawn "cadrocfile"; }
+```
+
+### Instalação
+
+O próprio repositório `cadrocfile` já tem um instalador bem completo (`install.sh`), que baixa binário pré-compilado quando possível ou compila a partir do código.
+
+#### Opção 1: Pelo install.sh do niri-dotfiles (recomendado)
+
+```sh
+cd ~/niri-dotfiles
+./install.sh --cadrocfile
+```
+
+Ele vai clonar/usar `~/cadrocfile`, rodar o instalador dele e colocar o binário em `~/.local/bin/` (ou `/usr/local/bin/` caso rode com privilégios necessários).
+
+#### Opção 2: Manual
+
+```sh
+# Clonar (se ainda não tiver)
+git clone https://github.com/souandresouza/cadrocfile ~/cadrocfile
+cd ~/cadrocfile
+
+# Instalar (detecta distro, instala deps, baixa binário ou compila)
+./install.sh
+```
+
+### Configuração
+
+As configurações ficam em `~/.config/cadrocfile/`. O instalador **não** sobrescreve nada que já exista lá.
+
+### Dica
+
+Garanta que `~/.local/bin` está no seu `$PATH`. Em muitas distros já vem, mas caso não venha, adicione ao seu `.bashrc`/`.zshrc`:
+
+```sh
+export PATH="$HOME/.local/bin:$PATH"
+```
