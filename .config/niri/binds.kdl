@@ -16,14 +16,14 @@ binds {
     Mod+Space { spawn "fuzzel"; }
 
     // Aplicativos principais
-    Mod+E { spawn "thunar"; }
+    Mod+E { spawn "cadrocfile"; }
     Mod+B { spawn "firefox"; }
     Mod+T { spawn "Telegram"; }
-    Mod+L { spawn "sh" "-c" "$HOME/.config/scripts/screenlock.sh"; }
+    Mod+L { spawn "sh" "-c" "$HOME/.local/bin/lock.sh"; }
 
     // Ferramentas de terminal (TUI)
     Mod+W { spawn "kitty" "-e" "btop"; }
-    Mod+X { spawn "kitty" "-e" "scrcpy"; }
+    Mod+Y { spawn "kitty" "-e" "yazi"; }
     Mod+P { spawn "kitty" "-e" "nmtui"; }
     Mod+Shift+A { spawn "kitty" "-e" "bluetui"; }
 
@@ -159,40 +159,40 @@ binds {
     // 9. SCREENSHOTS
     // =========================================================================
 
-    Print { spawn "sh" "-c" "$HOME/.config/scripts/take-screenshot.sh"; }        // Captura região + anotação (satty)
-    Ctrl+Print { screenshot-screen; }                            // Captura tela inteira
-    Alt+Print { screenshot-window; }                             // Captura janela ativa
+    Print { screenshot; }         // Interactive selection UI
+    Shift+Print { screenshot-screen; }   // Full focused screen
+    Ctrl+Print { screenshot-window; }   // Active window
 
     // =========================================================================
     // 10. FERRAMENTAS E SCRIPTS
     // =========================================================================
 
     // Sistema e interface
-    Mod+R { spawn "sh" "-c" "$HOME/.config/scripts/refresh-waybar.sh"; }        // Recarregar Waybar
-    Mod+M { spawn "sh" "-c" "$HOME/.config/scripts/exit-menu.sh"; }            // Menu de saída
-    Mod+G { spawn "sh" "-c" "$HOME/.config/scripts/run-scripts.sh"; }             // Regenerar cores de todos os apps
-    Mod+S { spawn "sh" "-c" "$HOME/.config/scripts/calendar.sh"; }              // Calendário via notificação
-    Mod+Shift+D { spawn "sh" "-c" "$HOME/.config/scripts/dashboard_toggle.sh"; } // Dashboard
-    Mod+V { spawn "sh" "-c" "$HOME/.config/scripts/clipboard_toggle.sh"; }      // Clipboard
+    Mod+N { spawn "killall" "-SIGUSR2" "waybar"; }        // Recarregar Waybar
+    Mod+M { spawn "sh" "-c" "$HOME/.local/bin/exit.sh"; }            // Menu de saída
+    Mod+G { spawn "sh" "-c" "$HOME/.local/bin/sequencia.sh"; }             // Regenerar cores de todos os apps
+    Mod+S { spawn "sh" "-c" "$HOME/.local/bin/calendar.sh"; }              // Calendário via notificação
+    Mod+Shift+D { spawn "sh" "-c" "$HOME/.local/bin/dashboard_toggle.sh"; } // Dashboard
+    Mod+V { spawn "sh" "-c" "$HOME/.local/bin/clipboard_toggle.sh"; }      // Clipboard
+    Mod+X { spawn "sh" "-c" "$HOME/.local/bin/android_mirror.sh"; }      // scrcpy
     Mod+Shift+P { power-off-monitors; }                                         // Desligar monitores
 
     // Papel de parede e aparência
-    Mod+H { spawn "sh" "-c" "$HOME/.config/scripts/random-wallpaper.sh"; }     // Wallpaper aleatório
+    Mod+H { spawn "sh" "-c" "$HOME/.local/bin/random-wallpaper.sh"; }     // Wallpaper aleatório
 
     // Ferramentas de produtividade
-    Mod+N { spawn "sh" "-c" "$HOME/.config/scripts/qr.sh"; }                   // Gerar QR code
     Mod+A { spawn "sh" "-c" "$HOME/.config/niri/scripts/niri-keys.sh"; }                 // Visualizar atalhos
 
     // Processamento de mídia
-    Mod+J { spawn "sh" "-c" "$HOME/.config/scripts/extract_frames.sh"; }       // Extrair frames de vídeo
-    Mod+I { spawn "sh" "-c" "$HOME/.config/scripts/converter_imagens.sh"; }    // Converter imagens
-    Mod+Shift+G { spawn "sh" "-c" "$HOME/.config/scripts/screenrecord.sh"; }   // Gravar tela
+    Mod+J { spawn "sh" "-c" "$HOME/.local/bin/video_frames_extract.sh"; }       // Extrair frames de vídeo
+    Mod+I { spawn "sh" "-c" "$HOME/.local/bin/images_convert.sh"; }    // Converter imagens
+    Mod+Shift+G { spawn "sh" "-c" "$HOME/.local/bin/record.sh"; }   // Gravar tela
 
     // =========================================================================
     // 11. SELETORES DE COR (HYPRPICKER)
     // =========================================================================
 
-    Mod+Shift+C { spawn "sh" "-c" "$HOME/.config/scripts/hyprpicker.sh -hex"; } // Cor em hexadecimal
+    Mod+Shift+C { spawn "sh" "-c" "$HOME/.local/bin/color_picker.sh -hex"; } // Cor em hexadecimal
 
     // =========================================================================
     // 12. CONTROLES DO SISTEMA
