@@ -173,3 +173,13 @@ ruwall -f base16-monokai
 ```
 
 > Os caches ficam em `~/.cache/wal/` (`colors.json`, `colors.sh`, etc), no mesmo padrão do pywal.
+
+## Atenção: base EndeavourOS
+
+Este repositório **foi pensado e testado no [EndeavourOS](https://endeavouros.com/) com [Niri](https://github.com/YaLTeR/niri)**. 
+
+As listas `lista_pacman.txt` e `lista_aur.txt` são geradas a partir dos **pacotes explícitos** instalados na minha máquina. Ou seja, **refletem exatamente o meu setup atual**, não um "mínimo funcional" para um Arch Linux puro.
+
+Se você quiser **reproduzir exatamente a minha configuração**, use este repositório no EndeavourOS. 
+
+Se você pretende usar em um **Arch Linux puro (base)**, provavelmente alguns pacotes extras serão necessários (ex.: `base-devel`, polkit agents, ferramentas de rede, etc.). O `install.sh` tenta ser resiliente, mas caso ocorra algum problema, você pode comparar com as listas, ajustar conforme seu sistema e instalar manualmente.

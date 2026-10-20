@@ -158,14 +158,15 @@ while (($#)); do
 done
 
 case "$MODE" in
-    pacman)   install_pacman ;;
-    aur)      install_aur ;;
-    cadrocfile) install_cadrocfile ;;
-    ruwall) install_ruwall ;;
+    pacman)   check_build_deps; install_pacman ;;
+    aur)      check_build_deps; install_aur ;;
+    cadrocfile) check_build_deps; install_cadrocfile ;;
+    ruwall)   check_build_deps; install_ruwall ;;
     services) install_services ;;
     lists)    regenerate_lists ;;
     *)
         [[ "$(id -u)" -eq 0 ]] && err "Não rode como root (o AUR exige usuário normal)."
+        check_build_deps
         install_pacman
         install_aur
         log "Sugestão: habilite os serviços com ./install.sh --services"
@@ -241,9 +242,7 @@ install_ruwall() {
         return
     fi
 
-    if ! command -v cargo >/dev/null 2>&1; then
-        err "cargo não encontrado. Instale o Rust (rustup) antes de compilar o ruwall."
-    fi
+    ensure_cargo
 
     mkdir -p "$HOME/.local/bin"
 
@@ -263,4 +262,68 @@ install_ruwall() {
     else
         warn "ruwall pode não estar no PATH. Verifique em ~/.local/bin"
     fi
+}
+
+# -----------------------------------------------------------------------------
+# 0. CHECAGENS PARA ARCH PURO
+# -----------------------------------------------------------------------------
+check_build_deps() {
+    local missing=()
+
+    if [[ "$(id -u)" -eq 0 ]]; then
+        return
+    fi
+
+    # Dependências mínimas para compilar/instalar AUR e meus projetos
+    if ! pacman -Qq base-devel >/dev/null 2>&1; then
+        missing+=("base-devel")
+    fi
+
+    if ! command -v git >/dev/null 2>&1; then
+        missing+=("git")
+    fi
+
+    if ! command -v curl >/dev/null 2>&1 && ! command -v wget >/dev/null 2>&1; then
+        missing+=("curl")
+    fi
+
+    if ((${#missing[@]} > 0)); then
+        warn "Dependências para build/AUR ausentes: ${missing[*]}"
+        warn "No Arch Linux puro você pode instalar com:"
+        warn "  sudo pacman -S --needed ${missing[*]}"
+        warn "Se já estiverem instalados, essa verificação pode falhar caso não sejam explícitos."
+    fi
+}
+
+ensure_cargo() {
+    if command -v cargo >/dev/null 2>&1; then
+        return 0
+    fi
+
+    warn "Rust/Cargo não encontrado. Necessário para compilar o ruwall."
+    warn "Opções:"
+    warn "  - rustup (recomendado): curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"
+    warn "  - pacman (mais simples): sudo pacman -S --needed rust"
+
+    if have pacman && [[ "$(id -u)" -ne 0 ]]; then
+        if [[ "$DRY_RUN" -eq 1 ]]; then
+            log "[dry-run] Instalaria rust via pacman se necessário"
+            return 0
+        fi
+
+        read -r -p "[install.sh] Tentar instalar 'rust' via pacman agora? [y/N] " ans </dev/tty || ans="n"
+        case "$ans" in
+            [Yy]*) 
+                log "Instalando rust..."
+                sudo pacman -S --needed --noconfirm rust || warn "Falha ao instalar rust via pacman. Instale manualmente com rustup."
+                ;;
+            *) 
+                err "Instale Rust/Cargo para compilar o ruwall (use rustup ou pacman)."
+                ;;
+        esac
+    else
+        err "Instale Rust/Cargo (rustup ou pacman) e rode novamente."
+    fi
+
+    command -v cargo >/dev/null 2>&1 || err "cargo ainda não encontrado no PATH após tentativa de instalação."
 }
