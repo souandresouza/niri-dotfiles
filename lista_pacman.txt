@@ -156,12 +156,6 @@ swaybg
 swayidle
 swaync
 telegram-desktop
-thunar
-thunar-archive-plugin
-thunar-media-tags-plugin
-thunar-shares-plugin
-thunar-vcs-plugin
-thunar-volman
 tlp
 tree
 ttf-bitstream-vera
