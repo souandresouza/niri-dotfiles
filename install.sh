@@ -8,6 +8,7 @@
 #   ./install.sh --pacman        Instala apenas os pacotes oficiais
 #   ./install.sh --aur           Instala apenas os pacotes AUR
 #   ./install.sh --cadrocfile    Clona/atualiza e instala o cadrocfile (meu file manager)
+#   ./install.sh --ruwall       Clona/atualiza e instala o ruwall (gerador de paleta)
 #   ./install.sh --services      Habilita os serviços de servicos.txt
 #   ./install.sh --dry-run       Mostra o que seria feito, sem alterar nada
 #   ./install.sh --update-lists  Regenera lista_pacman.txt e lista_aur.txt
@@ -146,6 +147,7 @@ while (($#)); do
         --pacman)   MODE="pacman" ;;
         --aur)      MODE="aur" ;;
         --cadrocfile) MODE="cadrocfile" ;;
+        --ruwall) MODE="ruwall" ;;
         --services) MODE="services" ;;
         --dry-run)  DRY_RUN=1 ;;
         --update-lists|--lists) MODE="lists" ;;
@@ -159,6 +161,7 @@ case "$MODE" in
     pacman)   install_pacman ;;
     aur)      install_aur ;;
     cadrocfile) install_cadrocfile ;;
+    ruwall) install_ruwall ;;
     services) install_services ;;
     lists)    regenerate_lists ;;
     *)
@@ -209,5 +212,55 @@ install_cadrocfile() {
         log "cadrocfile instalado com sucesso: $(command -v cadrocfile)"
     else
         warn "cadrocfile pode não estar no PATH. Verifique em ~/.local/bin"
+    fi
+}
+
+# -----------------------------------------------------------------------------
+# 14. RUWALL (GERADOR DE PALETA DE CORES)
+# -----------------------------------------------------------------------------
+install_ruwall() {
+    local repo_dir="$HOME/ruwall"
+    local bin_out="$repo_dir/target/release/ruwall"
+
+    log "Instalando ruwall (gerador de paleta de cores)..."
+
+    if [[ -d "$repo_dir" ]]; then
+        log "Repositório ruwall já existe em $repo_dir"
+    else
+        if [[ "$DRY_RUN" -eq 1 ]]; then
+            log "Clonaria https://github.com/souandresouza/ruwall.git em $repo_dir"
+        else
+            log "Clonando https://github.com/souandresouza/ruwall.git..."
+            git clone --depth 1 "https://github.com/souandresouza/ruwall.git" "$repo_dir"
+        fi
+    fi
+
+    if [[ "$DRY_RUN" -eq 1 ]]; then
+        log "Compilaria com: cargo build --release"
+        log "Instalaria em: $HOME/.local/bin/ruwall"
+        return
+    fi
+
+    if ! command -v cargo >/dev/null 2>&1; then
+        err "cargo não encontrado. Instale o Rust (rustup) antes de compilar o ruwall."
+    fi
+
+    mkdir -p "$HOME/.local/bin"
+
+    (
+        cd "$repo_dir"
+        log "Compilando ruwall (pode demorar alguns minutos)..."
+        cargo build --release
+    )
+
+    [[ -f "$bin_out" ]] || err "Binário não encontrado após compilação: $bin_out"
+
+    install -m755 "$bin_out" "$HOME/.local/bin/ruwall"
+    log "ruwall instalado em $HOME/.local/bin/ruwall"
+
+    if command -v ruwall >/dev/null 2>&1; then
+        log "Versão: $(ruwall -v 2>&1 | head -n1)"
+    else
+        warn "ruwall pode não estar no PATH. Verifique em ~/.local/bin"
     fi
 }

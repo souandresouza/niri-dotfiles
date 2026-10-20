@@ -123,3 +123,53 @@ Garanta que `~/.local/bin` está no seu `$PATH`. Em muitas distros já vem, mas 
 ```sh
 export PATH="$HOME/.local/bin:$PATH"
 ```
+
+
+## ruwall (gerador de paleta de cores)
+
+O [ruwall](https://github.com/souandresouza/ruwall) é um port em Rust do `pywal`. Ele gera uma paleta de cores a partir do wallpaper e aplica em vários aplicativos (waybar, kitty, fuzzel, niri etc.).
+
+É usado pelos scripts do repositório, principalmente pelo `random-wallpaper.sh`, para manter o tema dinâmico conforme o wallpaper.
+
+### Instalação
+
+#### Opção 1: Pelo install.sh do niri-dotfiles (recomendado)
+
+```sh
+cd ~/niri-dotfiles
+./install.sh --ruwall
+```
+
+Ele vai clonar/usar `~/ruwall`, compilar com `cargo build --release` e instalar o binário em `~/.local/bin/ruwall`.
+
+#### Opção 2: Manual
+
+```sh
+# Clonar (se ainda não tiver)
+git clone https://github.com/souandresouza/ruwall ~/ruwall
+cd ~/ruwall
+
+# Compilar e instalar
+cargo build --release
+install -m755 target/release/ruwall ~/.local/bin/ruwall
+```
+
+### Requisitos
+
+- `rustup` / toolchain Rust funcional
+- `base-devel` (ou `build-essential`) já vem nas listas do `install.sh`
+
+### Uso básico
+
+```sh
+# Gerar cores a partir de um wallpaper
+ruwall -i ~/Imagens/wallpapers/meu-wallpaper.jpg
+
+# Restaurar último esquema
+ruwall -R
+
+# Usar tema pré-definido
+ruwall -f base16-monokai
+```
+
+> Os caches ficam em `~/.cache/wal/` (`colors.json`, `colors.sh`, etc), no mesmo padrão do pywal.
