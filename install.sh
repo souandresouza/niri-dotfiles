@@ -10,6 +10,7 @@
 #   ./install.sh --cadrocfile    Clona/atualiza e instala o cadrocfile (meu file manager)
 #   ./install.sh --ruwall       Clona/atualiza e instala o ruwall (gerador de paleta)
 #   ./install.sh --services      Habilita os serviços de servicos.txt
+#   ./install.sh --firefox       Aplica ajustes do Firefox para o Niri
 #   ./install.sh --dry-run       Mostra o que seria feito, sem alterar nada
 #   ./install.sh --update-lists  Regenera lista_pacman.txt e lista_aur.txt
 #
@@ -28,7 +29,7 @@ MODE="all"
 DRY_RUN=0
 
 usage() {
-    sed -n '2,15p' "${BASH_SOURCE[0]}" | sed 's/^#//'
+    sed -n '2,16p' "${BASH_SOURCE[0]}" | sed 's/^#//'
     exit 0
 }
 
@@ -149,6 +150,7 @@ while (($#)); do
         --cadrocfile) MODE="cadrocfile" ;;
         --ruwall) MODE="ruwall" ;;
         --services) MODE="services" ;;
+        --firefox)  MODE="firefox" ;;
         --dry-run)  DRY_RUN=1 ;;
         --update-lists|--lists) MODE="lists" ;;
         --help|-h)  usage ;;
@@ -157,22 +159,6 @@ while (($#)); do
     shift
 done
 
-case "$MODE" in
-    pacman)   check_build_deps; install_pacman ;;
-    aur)      check_build_deps; install_aur ;;
-    cadrocfile) check_build_deps; install_cadrocfile ;;
-    ruwall)   check_build_deps; install_ruwall ;;
-    services) install_services ;;
-    lists)    regenerate_lists ;;
-    *)
-        [[ "$(id -u)" -eq 0 ]] && err "Não rode como root (o AUR exige usuário normal)."
-        check_build_deps
-        install_pacman
-        install_aur
-        log "Sugestão: habilite os serviços com ./install.sh --services"
-        log "Concluído. Reinicie para finalizar a configuração, se necessário."
-        ;;
-esac
 # -----------------------------------------------------------------------------
 # 13. CADROCFILE (GERENCIADOR DE ARQUIVOS)
 # -----------------------------------------------------------------------------
@@ -327,3 +313,66 @@ ensure_cargo() {
 
     command -v cargo >/dev/null 2>&1 || err "cargo ainda não encontrado no PATH após tentativa de instalação."
 }
+
+# -----------------------------------------------------------------------------
+# 15. FIREFOX (AJUSTES PARA O NIRI)
+# -----------------------------------------------------------------------------
+# O xdg-desktop-portal-gtk não consegue criar a janela do file chooser no Niri
+# (compositor não-GNOME): "Unhandled parent window type" / "Failed to associate
+# portal window". Com isso, "Salvar imagem como..." no Firefox não abre nada.
+# Desabilitar o file picker do portal faz o Firefox usar o diálogo GTK nativo,
+# que funciona em qualquer compositor.
+install_firefox() {
+    local root base prefs_dir changed=0
+
+    if [[ "$DRY_RUN" -eq 1 ]]; then
+        log "Aplicaria widget.use-xdg-desktop-portal.file-picker=0 nos perfis do Firefox"
+        return
+    fi
+
+    # Firefox local usa ~/.mozilla/firefox (padrão) OU ~/.config/mozilla/firefox
+    # (quando XDG_CONFIG_HOME é respeitado). Cobre os dois.
+    for root in "$HOME/.mozilla/firefox" "$HOME/.config/mozilla/firefox"; do
+        [[ -d "$root" ]] || continue
+        for prefs_dir in "$root"/*.default*; do
+            [[ -d "$prefs_dir" ]] || continue
+
+            if grep -q 'use-xdg-desktop-portal.file-picker' "$prefs_dir/user.js" 2>/dev/null; then
+                log "Firefox já ajustado: $prefs_dir"
+                continue
+            fi
+
+            printf '%s\n' \
+                'user_pref("widget.use-xdg-desktop-portal.file-picker", 0);' \
+                >> "$prefs_dir/user.js"
+            log "Ajuste aplicado no Firefox: $prefs_dir"
+            changed=1
+        done
+    done
+
+    if [[ "$changed" -eq 0 ]]; then
+        log "Nenhum perfil do Firefox encontrado para ajustar (ok se não usa Firefox)."
+    fi
+}
+
+# -----------------------------------------------------------------------------
+# EXECUÇÃO (após todas as funções estarem definidas)
+# -----------------------------------------------------------------------------
+case "$MODE" in
+    pacman)     check_build_deps; install_pacman ;;
+    aur)        check_build_deps; install_aur ;;
+    cadrocfile) check_build_deps; install_cadrocfile ;;
+    ruwall)     check_build_deps; install_ruwall ;;
+    services)   install_services ;;
+    firefox)    install_firefox ;;
+    lists)      regenerate_lists ;;
+    *)
+        [[ "$(id -u)" -eq 0 ]] && err "Não rode como root (o AUR exige usuário normal)."
+        check_build_deps
+        install_pacman
+        install_aur
+        install_firefox
+        log "Sugestão: habilite os serviços com ./install.sh --services"
+        log "Concluído. Reinicie para finalizar a configuração, se necessário."
+        ;;
+esac

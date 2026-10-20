@@ -235,7 +235,7 @@ window-rule {
     match app-id="nmtui"
     match app-id="localsend"
     match app-id="cava"
-    match app-id="org.gnome.Nautilus"
+    match app-id="dev.cadrocfile.Files"
     match app-id="blueman"
     match app-id="nwg-look"
     match app-id="battery"
