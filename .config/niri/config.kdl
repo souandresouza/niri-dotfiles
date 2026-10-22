@@ -138,6 +138,10 @@ screenshot-path "~/Imagens/Screenshots/%d-%m-%Y/Screenshot from %d-%m-%Y %H-%M-%
 // Animações (sobrescreve o include se necessário)
 animations {}
 
+cursor {
+hide-after-inactive-ms 1000
+}
+
 // ---------------------------------------------------------------------------
 // 8. SOBREPOSIÇÃO DE TECLAS DE ATALHO
 // ---------------------------------------------------------------------------
@@ -184,9 +188,10 @@ window-rule {
 
 // --- Abrir maximizado ---
 window-rule {
-    match app-id="firefox"
+    match app-id="brave"
     match app-id="kitty"
     match app-id="btop"
+    match app-id="dev.cadrocfile.Files"
     open-maximized true
 }
 
@@ -235,7 +240,6 @@ window-rule {
     match app-id="nmtui"
     match app-id="localsend"
     match app-id="cava"
-    match app-id="dev.cadrocfile.Files"
     match app-id="blueman"
     match app-id="nwg-look"
     match app-id="battery"

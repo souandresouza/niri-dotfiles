@@ -17,7 +17,7 @@ binds {
 
     // Aplicativos principais
     Mod+E { spawn "cadrocfile"; }
-    Mod+B { spawn "firefox"; }
+    Mod+B { spawn "brave"; }
     Mod+T { spawn "Telegram"; }
     Mod+L { spawn "sh" "-c" "$HOME/.local/bin/lock.sh"; }
 
@@ -26,6 +26,8 @@ binds {
     Mod+Y { spawn "kitty" "-e" "yazi"; }
     Mod+P { spawn "kitty" "-e" "nmtui"; }
     Mod+Shift+A { spawn "kitty" "-e" "bluetui"; }
+    Mod+Shift+T { spawn "kitty" "-e" "tty-clock" "-s" "-c" "-D"; } //tty-clock
+    Mod+Shift+B { spawn "kitty" "-e" "cmus"; }
 
     // Emoji picker (copia emoji para clipboard)
     Mod+U { spawn "bash" "-c" "fuzzel --dmenu < ~/.config/niri/emoji-list.txt | awk '{print $1}' | tr -d '\\n' | wl-copy"; }

@@ -1,6 +1,6 @@
 // Configurações de layout e aparência
 layout {
-    gaps 16
+    gaps 10
     center-focused-column "never"
     empty-workspace-above-first
     default-column-display "tabbed"
