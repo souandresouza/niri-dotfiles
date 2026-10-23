@@ -83,8 +83,7 @@ environment {
     // Correção para aplicações Java no Wayland
     _JAVA_AWT_WM_NONREPARENTING "1"
 
-    // Display X11 (para XWayland)
-    DISPLAY "0"
+    // O DISPLAY do XWayland é exportado automaticamente pelo niri (25.08+).
 }
 
 // ---------------------------------------------------------------------------
