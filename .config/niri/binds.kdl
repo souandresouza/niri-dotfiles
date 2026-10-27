@@ -25,6 +25,7 @@ binds {
     Mod+W { spawn "kitty" "-e" "btop"; }
     Mod+Y { spawn "kitty" "-e" "yazi"; }
     Mod+P { spawn "kitty" "-e" "nmtui"; }
+    Mod+O { spawn "wineserver" "-k"; }
     Mod+Shift+A { spawn "kitty" "-e" "bluetui"; }
     Mod+Shift+T { spawn "kitty" "-e" "tty-clock" "-s" "-c" "-D"; } //tty-clock
     Mod+Shift+B { spawn "kitty" "-e" "cmus"; }
