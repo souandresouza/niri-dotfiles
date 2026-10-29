@@ -4,7 +4,7 @@
 # =============================================================================
 #
 # Uso:
-#   ./link.sh            Linka $HOME/.config/niri e $HOME/.config/scripts
+#   ./link.sh            Linka niri, scripts e wallpapers em $HOME/.config
 #   ./link.sh --dry-run  Mostra o que seria feito, sem alterar nada
 #   ./link.sh --help     Ajuda
 #
@@ -17,7 +17,7 @@ REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_DIR="$HOME/.config"
 
 DRY_RUN=0
-TARGETS=(niri scripts)
+TARGETS=(niri scripts wallpapers)
 
 log() { printf '[link.sh] %s\n' "$*"; }
 err() { printf '[link.sh] ERRO: %s\n' "$*" >&2; exit 1; }

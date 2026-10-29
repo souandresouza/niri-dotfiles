@@ -8,14 +8,16 @@ notificações, etc.), sincronizados em um repositório git.
 ```
 niri-dotfiles/
 ├── install.sh              # Instala pacotes das listas (official + AUR)
-├── link.sh                 # Cria symlinks de .config/niri e .config/scripts
+├── link.sh                 # Cria symlinks de .config/niri, scripts e wallpapers
 ├── check.sh                # Valida sintaxe dos scripts (.sh)
 ├── lista_pacman.txt        # Pacotes oficiais explícitos (pacman -Qenq)
 ├── lista_aur.txt           # Pacotes do AUR explícitos (pacman -Qemq)
 ├── servicos.txt            # Serviços systemd a habilitar
 └── .config/
     ├── niri/               # Config do niri (config, binds, layout, animações)
-    └── scripts/            # Scripts usados pelos binds e atalhos
+    ├── scripts/            # Scripts usados pelos binds e atalhos
+    │   └── wallpapers/     # Geradores de wallpaper reproduzíveis
+    └── wallpapers/         # Wallpapers versionados (default-dark.png)
 ```
 
 ## Restauração em uma máquina nova
@@ -75,6 +77,15 @@ git add lista_*.txt && git commit -s -m "Atualizar lista de pacotes"
   em `scripts/colors/` (ex.: `colors-waybar.css`), que regeneram os esquemas a
   partir do wal. O repositório guarda apenas os scripts que as geram, não a
   saída.
+- **Wallpaper padrão**: `~/.config/wallpapers/default-dark.png` é versionado no
+  repositório. Para regerá-lo (requer ImageMagick):
+
+  ```sh
+  ~/.config/scripts/wallpapers/default-dark.sh
+  ~/.local/bin/sequencia.sh ~/.config/wallpapers/default-dark.png
+  ```
+
+  O segundo comando atualiza a paleta do wal/ruwall e as cores dos apps.
 - Depois de rodar `./link.sh`, os diretórios em `$HOME/.config` apontam para o
   repositório: edite os arquivos **dentro do repo** e commite.
 
