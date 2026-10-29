@@ -4,3 +4,7 @@
 # Arquivos temporários
 *.tmp
 *~
+
+# Wallpapers pessoais (só o default-dark.png é versionado)
+.config/wallpapers/*
+!.config/wallpapers/default-dark.png
