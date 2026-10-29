@@ -58,7 +58,7 @@ list_available_wallpapers() {
         return 1
     fi
 
-    find "$WALLPAPER_DIR" -maxdepth 1 -type f \( \
+    find -L "$WALLPAPER_DIR" -maxdepth 1 -type f \( \
         -iname "*.jpg" -o -iname "*.jpeg" \
         -o -iname "*.png" -o -iname "*.gif" \
         -o -iname "*.webp" -o -iname "*.bmp" \
