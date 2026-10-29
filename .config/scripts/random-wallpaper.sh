@@ -177,7 +177,8 @@ main() {
     # Cria cópia do wallpaper
     cp "$SELECTED" "$CURRENT_WALLPAPER" 2>/dev/null || true
 
-    ruwall -i "$SELECTED"
+    # Gera a paleta e atualiza as cores de todos os apps (uma única fonte).
+    "$HOME/.config/scripts/run-scripts.sh" "$SELECTED"
     echo "✨ Concluído!" >&2
 }
 

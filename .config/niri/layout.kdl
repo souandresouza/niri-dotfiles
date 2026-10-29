@@ -1,10 +1,10 @@
 // Configurações de layout e aparência
 layout {
-    gaps 10
+    gaps 16
     center-focused-column "never"
     empty-workspace-above-first
     default-column-display "tabbed"
-    background-color "#121515"
+    background-color "#0b0f17"
 
     preset-column-widths {
         proportion 0.33333
@@ -23,16 +23,16 @@ layout {
     focus-ring {
         on
         width 4
-        active-color "#b5b9ba"
-        inactive-color "#121515"
+        active-color "#8faadc"
+        inactive-color "#0b0f17"
         urgent-color "#9b0000"
     }
 
     border {
         off
         width 4
-        active-color "#b5b9ba"
-        inactive-color "#121515"
+        active-color "#8faadc"
+        inactive-color "#0b0f17"
         urgent-color "#9b0000"
     }
 
@@ -42,7 +42,7 @@ layout {
         spread 5
         offset x=0 y=5
         draw-behind-window true
-        color "#121515"
+        color "#0b0f17"
     }
 
     tab-indicator {

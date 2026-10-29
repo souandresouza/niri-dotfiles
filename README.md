@@ -15,10 +15,28 @@ niri-dotfiles/
 ├── servicos.txt            # Serviços systemd a habilitar
 └── .config/
     ├── niri/               # Config do niri (config, binds, layout, animações)
-    ├── scripts/            # Scripts usados pelos binds e atalhos
+    │   └── scripts/        # Scripts exclusivos do niri (ex.: niri-keys.sh)
+    ├── scripts/            # Scripts compartilhados (lock, record, wallpaper, ...)
+    │   ├── colors/         # Geradores de cor por aplicativo
     │   └── wallpapers/     # Geradores de wallpaper reproduzíveis
     └── wallpapers/         # Wallpapers versionados (default-dark.png)
 ```
+
+### Organização dos scripts
+
+Não há symlinks por script nem cópias em `~/.local/bin`:
+
+- **`~/.config/scripts/`** — fonte única dos scripts compartilhados entre window
+  managers (lock, record, wallpaper, clipboard, cores, etc.). O diretório entra
+  no `PATH` pelo `~/.bashrc`.
+- **`~/.config/niri/scripts/`** — apenas o que depende do niri (lê `binds.kdl`,
+  chama `niri msg`, etc.).
+- **`~/.local/bin/`** — somente binários e ferramentas pessoais (`ruwall`,
+  `imvu-extractor`, scripts de estilo), nunca cópias de scripts versionados.
+
+Para outro window manager, crie `~/.config/<wm>/scripts/` só com o que for
+exclusivo dele e reutilize `~/.config/scripts/` para o resto. Os binds devem
+apontar sempre para o caminho canônico (`$HOME/.config/scripts/...`).
 
 ## Restauração em uma máquina nova
 
@@ -82,7 +100,7 @@ git add lista_*.txt && git commit -s -m "Atualizar lista de pacotes"
 
   ```sh
   ~/.config/scripts/wallpapers/default-dark.sh
-  ~/.local/bin/sequencia.sh ~/.config/wallpapers/default-dark.png
+  ~/.config/scripts/run-scripts.sh ~/.config/wallpapers/default-dark.png
   ```
 
   O segundo comando atualiza a paleta do wal/ruwall e as cores dos apps.

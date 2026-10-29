@@ -1,10 +1,16 @@
 #!/bin/sh
+# ~/.config/scripts/colors/kitty-colors.sh
+# Gera configuração de cores do Kitty baseado no wallpaper atual (via Pywal)
 
 COLORS_FILE="$HOME/.cache/wal/colors.css"
 KITTY_FILE="$HOME/.config/kitty/colors-kitty.conf"
 
 if [ ! -f "$COLORS_FILE" ]; then
-    echo "ERRO: Arquivo $COLORS_FILE não encontrado!"
+    echo "ERRO: sem paleta em $COLORS_FILE"
+    echo "Gere uma com:"
+    echo "  ~/.config/scripts/run-scripts.sh            # usa o wallpaper atual"
+    echo "  ~/.config/scripts/run-scripts.sh <imagem>   # de um arquivo"
+    echo "  (PALETTE_TOOL=wal volta ao pywal)"
     exit 1
 fi
 
@@ -41,35 +47,62 @@ clean_color() {
     echo "$1" | tr -d '[]# '
 }
 
-# DEBUG
-echo "foreground = [$(clean_color "$foreground")]"
-echo "background = [$(clean_color "$background")]"
-echo "cursor = [$(clean_color "$cursor")]"
-for i in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do
-    eval "echo \"color$i = [\$(clean_color \"\$color$i\")]\""
-done
-
 # Verificar se as cores foram extraídas
-if [ -z "$color0" ]; then
-    echo "ERRO: Nenhuma cor extraída."
+if [ -z "$color0" ] || [ -z "$background" ] || [ -z "$foreground" ] || [ -z "$cursor" ]; then
+    echo "ERRO: a paleta em $COLORS_FILE não tem cores utilizáveis."
+    echo "Regere com: ~/.config/scripts/run-scripts.sh"
     exit 1
 fi
 
 mkdir -p "$(dirname "$KITTY_FILE")"
 
-# Gerar arquivo no formato Waybar (sem aspas)
+# Gerar arquivo no formato do Kitty
 cat > "$KITTY_FILE" << EOF
-foreground $color7
-background $color0
-selection_foreground $color4
-selection_background $color2
-cursor $color7
-active_border_color $color7
+foreground $foreground
+background $background
+cursor      $cursor
+
+color0  $color0
+color1  $color1
+color2  $color2
+color3  $color3
+color4  $color4
+color5  $color5
+color6  $color6
+color7  $color7
+color8  $color8
+color9  $color9
+color10 $color10
+color11 $color11
+color12 $color12
+color13 $color13
+color14 $color14
+color15 $color15
+
+selection_foreground $foreground
+selection_background $color4
+
+active_border_color   $color7
 inactive_border_color $color0
-active_tab_foreground $color7
-active_tab_background $color0
+
+active_tab_foreground   $foreground
+active_tab_background   $background
 inactive_tab_foreground $color7
 inactive_tab_background $color0
 EOF
 
-pkill -SIGUSR1 -x kitty
+echo "✅ Configuração gerada em $KITTY_FILE"
+
+# Recarrega o Kitty se estiver em execução
+if pgrep -x kitty >/dev/null 2>&1; then
+    # 'load-config' relê o kitty.conf inteiro, já seguindo os includes.
+    # Precisa de allow_remote_control + listen_on no kitty.conf.
+    if kitty @ load-config >/dev/null 2>&1; then
+        echo "✅ Kitty recarregado"
+    else
+        pkill -SIGUSR1 -x kitty 2>/dev/null || true
+        echo "✅ Kitty recarregado (SIGUSR1)"
+    fi
+else
+    echo "ℹ️  Kitty não está em execução, configuração será aplicada no próximo início."
+fi

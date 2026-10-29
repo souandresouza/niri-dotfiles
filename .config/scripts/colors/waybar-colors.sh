@@ -1,22 +1,32 @@
 #!/bin/sh
+# ~/.config/scripts/colors/waybar-colors.sh
+# Gera configuração de cores do Waybar baseado no wallpaper atual (via Pywal)
 
 COLORS_FILE="$HOME/.cache/wal/colors.css"
 WAYBAR_FILE="$HOME/.config/waybar/colors-waybar.css"
 
 if [ ! -f "$COLORS_FILE" ]; then
-    echo "ERRO: Arquivo $COLORS_FILE não encontrado!"
+    echo "ERRO: sem paleta em $COLORS_FILE"
+    echo "Gere uma com:"
+    echo "  ~/.config/scripts/run-scripts.sh            # usa o wallpaper atual"
+    echo "  ~/.config/scripts/run-scripts.sh <imagem>   # de um arquivo"
+    echo "  (PALETTE_TOOL=wal volta ao pywal)"
+    echo "Sem paleta em ~/.cache/wal. Gere uma com:"
+    echo "  ~/.config/scripts/run-scripts.sh            # usa o wallpaper atual"
+    echo "  ~/.config/scripts/run-scripts.sh <imagem>   # de um arquivo"
+    echo "  (ou PALETTE_TOOL=wal para voltar ao pywal)"
     exit 1
 fi
 
 # Extrair cores do formato Pywal/CSS (--color0: #xxx;)
 extract_color() {
-    grep "\-\-color$1:" "$COLORS_FILE" | head -1 | awk -F': ' '{print $2}' | tr -d '; '
+    grep -- "--color$1:" "$COLORS_FILE" | head -1 | awk -F': ' '{print $2}' | tr -d '; '
 }
 
 # Extrair também background, foreground e cursor
-background=$(grep "\-\-background:" "$COLORS_FILE" | head -1 | awk -F': ' '{print $2}' | tr -d '; ')
-foreground=$(grep "\-\-foreground:" "$COLORS_FILE" | head -1 | awk -F': ' '{print $2}' | tr -d '; ')
-cursor=$(grep "\-\-cursor:" "$COLORS_FILE" | head -1 | awk -F': ' '{print $2}' | tr -d '; ')
+background=$(grep -- "--background:" "$COLORS_FILE" | head -1 | awk -F': ' '{print $2}' | tr -d '; ')
+foreground=$(grep -- "--foreground:" "$COLORS_FILE" | head -1 | awk -F': ' '{print $2}' | tr -d '; ')
+cursor=$(grep -- "--cursor:" "$COLORS_FILE" | head -1 | awk -F': ' '{print $2}' | tr -d '; ')
 
 # Extrair cores 0-15
 color0=$(extract_color 0)
@@ -36,22 +46,14 @@ color13=$(extract_color 13)
 color14=$(extract_color 14)
 color15=$(extract_color 15)
 
-# DEBUG
-echo "foreground = [$foreground]"
-echo "background = [$background]"
-echo "cursor = [$cursor]"
-for i in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do
-    eval "echo \"color$i = [\$color$i]\""
-done
-
 # Verificar se as cores foram extraídas
-if [ -z "$color0" ]; then
-    echo "ERRO: Nenhuma cor extraída."
+if [ -z "$color0" ] || [ -z "$background" ] || [ -z "$foreground" ]; then
+    echo "ERRO: a paleta em $COLORS_FILE não tem cores utilizáveis."
+    echo "Regere com: ~/.config/scripts/run-scripts.sh"
     exit 1
 fi
 
 mkdir -p "$(dirname "$WAYBAR_FILE")"
-rm -f "$WAYBAR_FILE"
 
 # Gerar arquivo no formato Waybar (sem aspas)
 cat > "$WAYBAR_FILE" << EOF
@@ -76,4 +78,13 @@ cat > "$WAYBAR_FILE" << EOF
 @define-color color14 $color14;
 @define-color color15 $color15;
 EOF
-pkill -SIGUSR2 -x waybar
+
+echo "✅ Configuração gerada em $WAYBAR_FILE"
+
+# Recarrega a Waybar se estiver em execução
+if pgrep -x waybar &>/dev/null; then
+    pkill -SIGUSR2 -x waybar 2>/dev/null || true
+    echo "✅ Waybar recarregada"
+else
+    echo "ℹ️  Waybar não está em execução, configuração será aplicada no próximo início."
+fi

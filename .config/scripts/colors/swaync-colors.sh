@@ -9,9 +9,13 @@ SWAYNC_FILE="$SWAYNC_DIR/colors-swaync.css"
 if [ ! -f "$COLORS_FILE" ]; then
     echo "ERRO: sem paleta em $COLORS_FILE"
     echo "Gere uma com:"
-    echo "  ~/.local/bin/sequencia.sh            # usa o wallpaper atual"
-    echo "  ~/.local/bin/sequencia.sh <imagem>   # de um arquivo"
+    echo "  ~/.config/scripts/run-scripts.sh            # usa o wallpaper atual"
+    echo "  ~/.config/scripts/run-scripts.sh <imagem>   # de um arquivo"
     echo "  (PALETTE_TOOL=wal volta ao pywal)"
+    echo "Sem paleta em ~/.cache/wal. Gere uma com:"
+    echo "  ~/.config/scripts/run-scripts.sh            # usa o wallpaper atual"
+    echo "  ~/.config/scripts/run-scripts.sh <imagem>   # de um arquivo"
+    echo "  (ou PALETTE_TOOL=wal para voltar ao pywal)"
     exit 1
 fi
 
@@ -58,7 +62,7 @@ done
 # Verificar se as cores foram extraídas
 if [ -z "$background" ] || [ -z "$foreground" ] || [ -z "$accent" ]; then
     echo "ERRO: a paleta em $COLORS_FILE não tem cores utilizáveis."
-    echo "Regere com: ~/.local/bin/sequencia.sh"
+    echo "Regere com: ~/.config/scripts/run-scripts.sh"
     exit 1
 fi
 
@@ -72,7 +76,7 @@ mkdir -p "$SWAYNC_DIR"
 
 # Heredoc sem aspas: as variáveis do Pywal são expandidas na geração.
 cat > "$SWAYNC_FILE" << EOF
-/* Gerado por ~/.local/bin/swaync-colors.sh a partir do Pywal.
+/* Gerado por ~/.config/scripts/colors/swaync-colors.sh a partir do Pywal.
    NÃO EDITE MANUALMENTE — edite style.css ou o script. */
 
 @define-color bg          $background;

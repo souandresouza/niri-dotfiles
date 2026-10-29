@@ -1,10 +1,20 @@
 #!/bin/sh
+# ~/.config/scripts/colors/fuzzel-colors.sh
+# Gera configuração de cores do fuzzel baseado no wallpaper atual (via Pywal)
 
 COLORS_FILE="$HOME/.cache/wal/colors.css"
 FUZZEL_FILE="$HOME/.config/fuzzel/colors-fuzzel.ini"
 
 if [ ! -f "$COLORS_FILE" ]; then
-    echo "ERRO: Arquivo $COLORS_FILE não encontrado!"
+    echo "ERRO: sem paleta em $COLORS_FILE"
+    echo "Gere uma com:"
+    echo "  ~/.config/scripts/run-scripts.sh            # usa o wallpaper atual"
+    echo "  ~/.config/scripts/run-scripts.sh <imagem>   # de um arquivo"
+    echo "  (PALETTE_TOOL=wal volta ao pywal)"
+    echo "Sem paleta em ~/.cache/wal. Gere uma com:"
+    echo "  ~/.config/scripts/run-scripts.sh            # usa o wallpaper atual"
+    echo "  ~/.config/scripts/run-scripts.sh <imagem>   # de um arquivo"
+    echo "  (ou PALETTE_TOOL=wal para voltar ao pywal)"
     exit 1
 fi
 
@@ -41,34 +51,32 @@ clean_color() {
     echo "$1" | tr -d '[]# '
 }
 
-# DEBUG
-echo "foreground = [$(clean_color "$foreground")]"
-echo "background = [$(clean_color "$background")]"
-echo "cursor = [$(clean_color "$cursor")]"
-for i in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do
-    eval "echo \"color$i = [\$(clean_color \"\$color$i\")]\""
-done
-
 # Verificar se as cores foram extraídas
-if [ -z "$color0" ]; then
-    echo "ERRO: Nenhuma cor extraída."
+if [ -z "$color0" ] || [ -z "$background" ] || [ -z "$foreground" ]; then
+    echo "ERRO: a paleta em $COLORS_FILE não tem cores utilizáveis."
+    echo "Regere com: ~/.config/scripts/run-scripts.sh"
     exit 1
 fi
 
 mkdir -p "$(dirname "$FUZZEL_FILE")"
 
 # Criar configuração com alpha ff
+# Mapeamento otimizado para melhor contraste e legibilidade
 cat > "$FUZZEL_FILE" << EOF
 [colors]
-background=${color0}ff
-prompt=${color15}ff
-text=${color15}ff
-placeholder=${color15}ff
-input=${color15}ff
-match=${color15}ff
-selection=${color15}ff
-selection-text=${color0}ff
-selection-match=${color15}ff
-border=${color15}ff
+background=${background}ff
+prompt=${foreground}ff
+text=${foreground}ff
+placeholder=${color8}ff
+input=${foreground}ff
+match=${color14}ff
+selection=${color4}ff
+selection-text=${background}ff
+selection-match=${color14}ff
+border=${color4}ff
 EOF
-pkill -SIGUSR1 -x fuzzel
+
+# Recarrega o fuzzel se estiver em execução
+pkill -SIGUSR1 -x fuzzel 2>/dev/null || true
+
+echo "✅ Cores do fuzzel atualizadas com base no wallpaper atual"

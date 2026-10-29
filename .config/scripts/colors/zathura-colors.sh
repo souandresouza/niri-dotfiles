@@ -4,7 +4,11 @@ COLORS_FILE="$HOME/.cache/wal/colors.css"
 ZATHURA_FILE=~/.config/zathura/zathurarc
 
 if [ ! -f "$COLORS_FILE" ]; then
-    echo "ERRO: Arquivo $COLORS_FILE não encontrado!"
+    echo "ERRO: sem paleta em $COLORS_FILE"
+    echo "Gere uma com:"
+    echo "  ~/.config/scripts/run-scripts.sh            # usa o wallpaper atual"
+    echo "  ~/.config/scripts/run-scripts.sh <imagem>   # de um arquivo"
+    echo "  (PALETTE_TOOL=wal volta ao pywal)"
     exit 1
 fi
 
@@ -41,17 +45,10 @@ clean_color() {
     echo "$1" | tr -d '[]# '
 }
 
-# DEBUG
-echo "foreground = [$(clean_color "$foreground")]"
-echo "background = [$(clean_color "$background")]"
-echo "cursor = [$(clean_color "$cursor")]"
-for i in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do
-    eval "echo \"color$i = [\$(clean_color \"\$color$i\")]\""
-done
-
 # Verificar se as cores foram extraídas
 if [ -z "$color0" ]; then
-    echo "ERRO: Nenhuma cor extraída."
+    echo "ERRO: a paleta em $COLORS_FILE não tem cores utilizáveis."
+    echo "Regere com: ~/.config/scripts/run-scripts.sh"
     exit 1
 fi
 
@@ -97,4 +94,4 @@ map f toggle_fullscreen
 map [fullscreen] f toggle_fullscreen
 EOF
 
-pkill -SIGUSR1 -x zathura
+pkill -SIGUSR1 -x zathura 2>/dev/null || true

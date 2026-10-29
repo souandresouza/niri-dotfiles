@@ -10,7 +10,7 @@ binds {
     // =========================================================================
 
     // Terminal (detecta automaticamente o terminal preferido)
-    Mod+Return { spawn-sh "bash $HOME/.local/bin/auto_detect_terminal.sh"; }
+    Mod+Return { spawn-sh "bash $HOME/.config/scripts/auto_detect_terminal.sh"; }
 
     // Lançador de aplicativos
     Mod+Space { spawn "fuzzel"; }
@@ -19,7 +19,7 @@ binds {
     Mod+E { spawn "cadrocfile"; }
     Mod+B { spawn "brave"; }
     Mod+T { spawn "Telegram"; }
-    Mod+L { spawn "sh" "-c" "$HOME/.local/bin/lock.sh"; }
+    Mod+L { spawn "sh" "-c" "$HOME/.config/scripts/lock.sh"; }
 
     // Ferramentas de terminal (TUI)
     Mod+W { spawn "kitty" "-e" "btop"; }
@@ -172,30 +172,30 @@ binds {
 
     // Sistema e interface
     Mod+N { spawn "killall" "-SIGUSR2" "waybar"; }        // Recarregar Waybar
-    Mod+M { spawn "sh" "-c" "$HOME/.local/bin/exit.sh"; }            // Menu de saída
-    Mod+G { spawn "sh" "-c" "$HOME/.local/bin/sequencia.sh"; }             // Regenerar cores de todos os apps
-    Mod+S { spawn "sh" "-c" "$HOME/.local/bin/calendar.sh"; }              // Calendário via notificação
-    Mod+Shift+D { spawn "sh" "-c" "$HOME/.local/bin/dashboard_toggle.sh"; } // Dashboard
-    Mod+V { spawn "sh" "-c" "$HOME/.local/bin/clipboard_toggle.sh"; }      // Clipboard
-    Mod+X { spawn "sh" "-c" "$HOME/.local/bin/android_mirror.sh"; }      // scrcpy
+    Mod+M { spawn "sh" "-c" "$HOME/.config/scripts/exit.sh"; }            // Menu de saída
+    Mod+G { spawn "sh" "-c" "$HOME/.config/scripts/run-scripts.sh"; }             // Regenerar cores de todos os apps
+    Mod+S { spawn "sh" "-c" "$HOME/.config/scripts/calendar.sh"; }              // Calendário via notificação
+    Mod+Shift+D { spawn "sh" "-c" "$HOME/.config/scripts/dashboard_toggle.sh"; } // Dashboard
+    Mod+V { spawn "sh" "-c" "$HOME/.config/scripts/clipboard_toggle.sh"; }      // Clipboard
+    Mod+X { spawn "sh" "-c" "$HOME/.config/scripts/android_mirror.sh"; }      // scrcpy
     Mod+Shift+P { power-off-monitors; }                                         // Desligar monitores
 
     // Papel de parede e aparência
-    Mod+H { spawn "sh" "-c" "$HOME/.local/bin/random-wallpaper.sh"; }     // Wallpaper aleatório
+    Mod+H { spawn "sh" "-c" "$HOME/.config/scripts/random-wallpaper.sh"; }     // Wallpaper aleatório
 
     // Ferramentas de produtividade
     Mod+A { spawn "sh" "-c" "$HOME/.config/niri/scripts/niri-keys.sh"; }                 // Visualizar atalhos
 
     // Processamento de mídia
-    Mod+J { spawn "sh" "-c" "$HOME/.local/bin/video_frames_extract.sh"; }       // Extrair frames de vídeo
-    Mod+I { spawn "sh" "-c" "$HOME/.local/bin/images_convert.sh"; }    // Converter imagens
-    Mod+Shift+G { spawn "sh" "-c" "$HOME/.local/bin/record.sh"; }   // Gravar tela
+    Mod+J { spawn "sh" "-c" "$HOME/.config/scripts/video_frames_extract.sh"; }       // Extrair frames de vídeo
+    Mod+I { spawn "sh" "-c" "$HOME/.config/scripts/images_convert.sh"; }    // Converter imagens
+    Mod+Shift+G { spawn "sh" "-c" "$HOME/.config/scripts/record.sh"; }   // Gravar tela
 
     // =========================================================================
     // 11. SELETORES DE COR (HYPRPICKER)
     // =========================================================================
 
-    Mod+Shift+C { spawn "sh" "-c" "$HOME/.local/bin/color_picker.sh -hex"; } // Cor em hexadecimal
+    Mod+Shift+C { spawn "sh" "-c" "$HOME/.config/scripts/color_picker.sh -hex"; } // Cor em hexadecimal
 
     // =========================================================================
     // 12. CONTROLES DO SISTEMA
