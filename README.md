@@ -104,6 +104,10 @@ git add lista_*.txt && git commit -s -m "Atualizar lista de pacotes"
   ```
 
   O segundo comando atualiza a paleta do wal/ruwall e as cores dos apps.
+- **`random-wallpaper.sh` (Mod+H)**: percorre todos os wallpapers da pasta antes
+  de repetir qualquer um (ciclo persistido em
+  `~/.cache/wallpapers/wallpaper_cycle.txt`). Com um único wallpaper, ele apenas
+  reaplica esse mesmo arquivo.
 - Depois de rodar `./link.sh`, os diretórios em `$HOME/.config` apontam para o
   repositório: edite os arquivos **dentro do repo** e commite.
 
