@@ -1,3 +1,4 @@
+brave-bin
 localsend
 mpv-full
 python-pywal
@@ -5,3 +6,4 @@ swaylock-effects
 wal-telegram-git
 waybar-git
 yay-bin
+yay-bin-debug

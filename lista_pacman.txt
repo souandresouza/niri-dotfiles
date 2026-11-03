@@ -22,6 +22,7 @@ bluez-obex
 bluez-utils
 brightnessctl
 btop
+btrfs-progs
 cabextract
 cantarell-fonts
 cava
@@ -42,7 +43,6 @@ f2fs-tools
 fastfetch
 ffmpegthumbnailer
 file-roller
-firefox
 flatpak
 font-manager
 fsarchiver
@@ -53,6 +53,7 @@ gammastep
 geoclue
 gimp
 git
+github-cli
 glances
 glaze
 gpart
@@ -67,6 +68,8 @@ gst-plugins-good
 gst-plugins-ugly
 gst-plugin-va
 gvfs
+gvfs-afc
+gvfs-gphoto2
 gvfs-mtp
 gvfs-nfs
 gvfs-smb
@@ -89,6 +92,7 @@ libopenraw
 libpulse
 libreoffice-fresh
 libva-intel-driver
+linux
 linux-firmware
 linux-zen
 lsb-release
@@ -111,6 +115,7 @@ noto-fonts
 noto-fonts-cjk
 noto-fonts-emoji
 nss-mdns
+ntfs-3g
 ntfsprogs
 nwg-look
 ollama
@@ -121,6 +126,7 @@ pacman-contrib
 pamixer
 papirus-icon-theme
 pavucontrol
+pigz
 pipewire
 pipewire-alsa
 pipewire-jack
@@ -137,6 +143,7 @@ qbittorrent
 qt5ct
 qt6ct
 qt6-multimedia
+rclone
 realtime-privileges
 rebuild-detector
 reflector
@@ -148,6 +155,7 @@ sddm
 sg3_utils
 slurp
 smartmontools
+snapper
 sof-firmware
 speech-dispatcher
 stb
@@ -183,6 +191,10 @@ vulkan-intel
 vulkan-nouveau
 vulkan-radeon
 wget
+wine
+wine-gecko
+wine-mono
+winetricks
 wireplumber
 wl-clip-persist
 wlr-randr
