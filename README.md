@@ -8,7 +8,7 @@ notificações, etc.), sincronizados em um repositório git.
 ```
 niri-dotfiles/
 ├── install.sh              # Instala pacotes das listas (official + AUR)
-├── link.sh                 # Cria symlinks de .config/niri, scripts e wallpapers
+├── link.sh                 # Cria symlinks das configs e scripts em ~/.config
 ├── check.sh                # Valida sintaxe dos scripts (.sh)
 ├── lista_pacman.txt        # Pacotes oficiais explícitos (pacman -Qenq)
 ├── lista_aur.txt           # Pacotes do AUR explícitos (pacman -Qemq)
@@ -19,7 +19,14 @@ niri-dotfiles/
     ├── scripts/            # Scripts compartilhados (lock, record, wallpaper, ...)
     │   ├── colors/         # Geradores de cor por aplicativo
     │   └── wallpapers/     # Geradores de wallpaper reproduzíveis
-    └── wallpapers/         # Wallpapers versionados (default-dark.png)
+    ├── wallpapers/         # Wallpapers versionados (default-dark.png)
+    ├── cava/               # Config, temas e shaders do visualizador de áudio
+    ├── fastfetch/          # config.jsonc e ascii.txt
+    ├── fuzzel/             # Launcher (config + cores geradas)
+    ├── kitty/              # Terminal (config + cores geradas)
+    ├── swaync/             # Notificações (cores geradas)
+    ├── waybar/             # Barra (config, style e cores geradas)
+    └── zathura/            # Leitor de PDF (config + cores geradas)
 ```
 
 ### Organização dos scripts
@@ -90,11 +97,13 @@ git add lista_*.txt && git commit -s -m "Atualizar lista de pacotes"
   `scripts/colors/niri-colors.sh` (executado via `run-scripts.sh` no startup e no
   `Mod+G`). A versão versionada serve de fallback para máquinas novas antes do
   primeiro `ruwall`; depois ela é sobrescrita com as cores do wallpaper atual.
-- **Configurações de outros apps** (waybar, fuzzel, kitty, swaync, cava, etc.)
-  **não são versionadas**: as partes dinâmicas são geradas pelos scripts de cor
-  em `scripts/colors/` (ex.: `colors-waybar.css`), que regeneram os esquemas a
-  partir do wal. O repositório guarda apenas os scripts que as geram, não a
-  saída.
+- **Configurações dos apps de aparência** (`cava`, `fastfetch`, `fuzzel`,
+  `kitty`, `swaync`, `waybar` e `zathura`) são versionadas em `.config/<app>`.
+  Os arquivos de cor (`colors-*`, `cava/themes/colors`, `zathurarc`) são
+  **gerados** pelos scripts em `scripts/colors/` a partir do wallpaper, mas
+  ficam no repositório como fallback para o primeiro boot. Eles são
+  sobrescritos pelo `run-scripts.sh`; se quiser manter o tema atual, commite as
+  mudanças depois de trocar o wallpaper.
 - **Wallpaper padrão**: `~/.config/wallpapers/default-dark.png` é versionado no
   repositório. Para regerá-lo (requer ImageMagick):
 

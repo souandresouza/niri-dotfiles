@@ -4,7 +4,7 @@
 # =============================================================================
 #
 # Uso:
-#   ./link.sh            Linka niri, scripts e wallpapers em $HOME/.config
+#   ./link.sh            Linka niri, scripts, wallpapers e configs de apps
 #   ./link.sh --dry-run  Mostra o que seria feito, sem alterar nada
 #   ./link.sh --help     Ajuda
 #
@@ -17,7 +17,10 @@ REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_DIR="$HOME/.config"
 
 DRY_RUN=0
-TARGETS=(niri scripts wallpapers)
+TARGETS=(
+    niri scripts wallpapers
+    cava fastfetch fuzzel kitty swaync waybar zathura
+)
 
 log() { printf '[link.sh] %s\n' "$*"; }
 err() { printf '[link.sh] ERRO: %s\n' "$*" >&2; exit 1; }
