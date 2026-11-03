@@ -17,6 +17,15 @@ cat > "$CONFIG_FILE" << 'EOF'
     "display": {
         "separator": "  "
     },
+    "logo": {
+        "type": "file",
+        "source": "~/.config/fastfetch/ascii.txt",
+        "padding": {
+            "top": 0,
+            "left": 1,
+            "right": 2
+        }
+    },
     "modules": [
         "title",
         "separator",
