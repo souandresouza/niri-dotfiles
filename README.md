@@ -24,6 +24,7 @@ niri-dotfiles/
     ├── fastfetch/          # config.jsonc e ascii.txt
     ├── fuzzel/             # Launcher (config + cores geradas)
     ├── kitty/              # Terminal (config + cores geradas)
+    ├── swaylock/           # Tela de bloqueio (config + cores geradas)
     ├── swaync/             # Notificações (cores geradas)
     ├── waybar/             # Barra (config, style e cores geradas)
     └── zathura/            # Leitor de PDF (config + cores geradas)
@@ -98,12 +99,12 @@ git add lista_*.txt && git commit -s -m "Atualizar lista de pacotes"
   `Mod+G`). A versão versionada serve de fallback para máquinas novas antes do
   primeiro `ruwall`; depois ela é sobrescrita com as cores do wallpaper atual.
 - **Configurações dos apps de aparência** (`cava`, `fastfetch`, `fuzzel`,
-  `kitty`, `swaync`, `waybar` e `zathura`) são versionadas em `.config/<app>`.
-  Os arquivos de cor (`colors-*`, `cava/themes/colors`, `zathurarc`) são
-  **gerados** pelos scripts em `scripts/colors/` a partir do wallpaper, mas
-  ficam no repositório como fallback para o primeiro boot. Eles são
-  sobrescritos pelo `run-scripts.sh`; se quiser manter o tema atual, commite as
-  mudanças depois de trocar o wallpaper.
+  `kitty`, `swaylock`, `swaync`, `waybar` e `zathura`) são versionadas em
+  `.config/<app>`. Os arquivos de cor (`colors-*`, `cava/themes/colors`,
+  `zathurarc`, `swaylock/config`) são **gerados** pelos scripts em
+  `scripts/colors/` a partir do wallpaper, mas ficam no repositório como
+  fallback para o primeiro boot. Eles são sobrescritos pelo `run-scripts.sh`; se
+  quiser manter o tema atual, commite as mudanças depois de trocar o wallpaper.
 - **Wallpaper padrão**: `~/.config/wallpapers/default-dark.png` é versionado no
   repositório. Para regerá-lo (requer ImageMagick):
 

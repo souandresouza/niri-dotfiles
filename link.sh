@@ -19,7 +19,7 @@ CONFIG_DIR="$HOME/.config"
 DRY_RUN=0
 TARGETS=(
     niri scripts wallpapers
-    cava fastfetch fuzzel kitty swaync waybar zathura
+    cava fastfetch fuzzel kitty swaylock swaync waybar zathura
 )
 
 log() { printf '[link.sh] %s\n' "$*"; }
