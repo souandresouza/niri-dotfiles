@@ -8,7 +8,7 @@ notificações, etc.), sincronizados em um repositório git.
 ```
 niri-dotfiles/
 ├── install.sh              # Instala pacotes das listas (official + AUR)
-├── link.sh                 # Cria symlinks das configs e scripts em ~/.config
+├── deploy.sh               # Copia configs/scripts do repo para ~/.config (sem symlinks)
 ├── check.sh                # Valida sintaxe dos scripts (.sh)
 ├── lista_pacman.txt        # Pacotes oficiais explícitos (pacman -Qenq)
 ├── lista_aur.txt           # Pacotes do AUR explícitos (pacman -Qemq)
@@ -32,12 +32,13 @@ niri-dotfiles/
 
 ### Organização dos scripts
 
-Não há symlinks por script nem cópias em `~/.local/bin`:
+Os scripts ficam versionados no repositório e são copiados para `~/.config`
+pelo `deploy.sh` (sem symlinks):
 
-- **`~/.config/scripts/`** — fonte única dos scripts compartilhados entre window
-  managers (lock, record, wallpaper, clipboard, cores, etc.). O diretório entra
+- **`.config/scripts/`** — scripts compartilhados entre window managers (lock,
+  record, wallpaper, clipboard, cores, etc.). Após o deploy, o diretório entra
   no `PATH` pelo `~/.bashrc`.
-- **`~/.config/niri/scripts/`** — apenas o que depende do niri (lê `binds.kdl`,
+- **`.config/niri/scripts/`** — apenas o que depende do niri (lê `binds.kdl`,
   chama `niri msg`, etc.).
 - **`~/.local/bin/`** — somente binários e ferramentas pessoais (`ruwall`,
   `imvu-extractor`, scripts de estilo), nunca cópias de scripts versionados.
@@ -45,6 +46,29 @@ Não há symlinks por script nem cópias em `~/.local/bin`:
 Para outro window manager, crie `~/.config/<wm>/scripts/` só com o que for
 exclusivo dele e reutilize `~/.config/scripts/` para o resto. Os binds devem
 apontar sempre para o caminho canônico (`$HOME/.config/scripts/...`).
+
+### Deploy e sincronização
+
+O `deploy.sh` copia os arquivos (sem symlinks). O sentido padrão é
+repositório → `~/.config`:
+
+```sh
+./deploy.sh              # copia e faz backup do que for substituído
+./deploy.sh --dry-run    # mostra o que mudaria, sem alterar nada
+./deploy.sh --generate   # depois de copiar, regenera as cores do tema atual
+./deploy.sh --prune      # remove arquivos que saíram do repo (wallpapers nunca)
+```
+
+Para o sentido inverso, capture o que mudou direto em `~/.config`:
+
+```sh
+./deploy.sh --pull       # ~/.config -> repo (só o default-dark.png nos wallpapers)
+git diff                 # revise
+git add -A && git commit -m "..."
+```
+
+Backups dos arquivos substituídos ou removidos ficam em
+`~/.cache/niri-dotfiles/backups/<timestamp>/`.
 
 ## Restauração em uma máquina nova
 
@@ -57,8 +81,9 @@ cd ~/niri-dotfiles
 ./install.sh              # instala todos os pacotes (oficial + AUR)
 ./install.sh --services   # habilita serviços de servicos.txt (bluetooth, NM, etc.)
 
-# 2. Deploy das configurações por symlink (backup automático dos diretórios existentes)
-./link.sh
+# 2. Deploy das configurações por cópia (backup do que for substituído)
+./deploy.sh
+./deploy.sh --generate    # opcional: gera as cores a partir do wallpaper atual
 
 # 3. Dependência local: ruwall (binário, não é pacote)
 #    Baixe o binário do ruwall e coloque em $HOME/.local/bin/ruwall
@@ -118,8 +143,11 @@ git add lista_*.txt && git commit -s -m "Atualizar lista de pacotes"
   de repetir qualquer um (ciclo persistido em
   `~/.cache/wallpapers/wallpaper_cycle.txt`). Com um único wallpaper, ele apenas
   reaplica esse mesmo arquivo.
-- Depois de rodar `./link.sh`, os diretórios em `$HOME/.config` apontam para o
-  repositório: edite os arquivos **dentro do repo** e commite.
+- O `deploy.sh` copia os arquivos para `$HOME/.config` (não usa symlinks) e
+  guarda backups dos arquivos substituídos em
+  `~/.cache/niri-dotfiles/backups/<timestamp>/`. Para capturar mudanças feitas
+  direto em `~/.config`, rode `./deploy.sh --pull`, revise com `git diff` e
+  commite.
 
 ## cadrocfile (gerenciador de arquivos)
 

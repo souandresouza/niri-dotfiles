@@ -1,4 +1,4 @@
-# Backups criados pelo link.sh
+# Backups criados pelo deploy.sh
 *.bak-*
 
 # Arquivos temporários
