@@ -1,7 +1,21 @@
 # niri-dotfiles
 
-Configuração do compositor Wayland **niri** e scripts de apoio (wal, wallpapers,
-notificações, etc.), sincronizados em um repositório git.
+Configuração do compositor Wayland **niri** no **Arch Linux puro (rolling)** e
+scripts de apoio (wal, wallpapers, notificações, etc.), sincronizados em um
+repositório git.
+
+## Capturas de tela
+
+> Informações pessoais (nome de usuário, hostname e nome da rede Wi-Fi) foram
+> desfocadas nas imagens.
+
+| Desktop | Launcher |
+|:---:|:---:|
+| [![Desktop com niri, waybar, kitty e fastfetch](docs/screenshots/desktop.webp)](docs/screenshots/desktop.webp) | [![Launcher fuzzel](docs/screenshots/launcher.webp)](docs/screenshots/launcher.webp) |
+
+### Waybar
+
+[![Barra do waybar em detalhe](docs/screenshots/waybar.webp)](docs/screenshots/waybar.webp)
 
 ## Estrutura
 
@@ -13,6 +27,7 @@ niri-dotfiles/
 ├── lista_pacman.txt        # Pacotes oficiais explícitos (pacman -Qenq)
 ├── lista_aur.txt           # Pacotes do AUR explícitos (pacman -Qemq)
 ├── servicos.txt            # Serviços systemd a habilitar
+├── docs/screenshots/       # Capturas de tela usadas no README
 └── .config/
     ├── niri/               # Config do niri (config, binds, layout, animações)
     │   └── scripts/        # Scripts exclusivos do niri (ex.: niri-keys.sh)
@@ -72,7 +87,15 @@ Backups dos arquivos substituídos ou removidos ficam em
 
 ## Restauração em uma máquina nova
 
-Pré-requisitos: Arch Linux base instalado, usuário criado e `sudo` configurado.
+Pré-requisitos: **Arch Linux puro (rolling)** instalado, usuário com `sudo` e
+rede funcionando. Antes de rodar o `install.sh`, garanta as ferramentas básicas
+de build e sincronização:
+
+```sh
+sudo pacman -S --needed base-devel git curl rsync
+```
+
+Depois clone o repositório e rode a instalação:
 
 ```sh
 # 1. Clone e instale os pacotes (primeira execução como usuário comum)
@@ -228,7 +251,7 @@ install -m755 target/release/ruwall ~/.local/bin/ruwall
 ### Requisitos
 
 - `rustup` / toolchain Rust funcional
-- `base-devel` (ou `build-essential`) já vem nas listas do `install.sh`
+- `base-devel` já vem nas listas do `install.sh`
 
 ### Uso básico
 
@@ -245,12 +268,23 @@ ruwall -f base16-monokai
 
 > Os caches ficam em `~/.cache/wal/` (`colors.json`, `colors.sh`, etc), no mesmo padrão do pywal.
 
-## Atenção: base EndeavourOS
+## Arch Linux puro (rolling)
 
-Este repositório **foi pensado e testado no [EndeavourOS](https://endeavouros.com/) com [Niri](https://github.com/YaLTeR/niri)**. 
+Este repositório é pensado e testado no **[Arch Linux](https://archlinux.org/)
+puro (rolling)** com [Niri](https://github.com/YaLTeR/niri). Não há dependência
+de meta-pacotes de distros derivadas.
 
-As listas `lista_pacman.txt` e `lista_aur.txt` são geradas a partir dos **pacotes explícitos** instalados na minha máquina. Ou seja, **refletem exatamente o meu setup atual**, não um "mínimo funcional" para um Arch Linux puro.
+As listas `lista_pacman.txt` e `lista_aur.txt` são geradas a partir dos
+**pacotes explícitos** instalados na minha máquina (`pacman -Qenq` e
+`pacman -Qemq`). Ou seja, **refletem exatamente o meu setup atual**, não um
+"mínimo funcional".
 
-Se você quiser **reproduzir exatamente a minha configuração**, use este repositório no EndeavourOS. 
+Se você quer **reproduzir exatamente a minha configuração**, use Arch Linux e
+rode o `install.sh` completo. Uma instalação base feita com `archinstall` já
+atende aos pré-requisitos; o restante vem das listas.
 
-Se você pretende usar em um **Arch Linux puro (base)**, provavelmente alguns pacotes extras serão necessários (ex.: `base-devel`, polkit agents, ferramentas de rede, etc.). O `install.sh` tenta ser resiliente, mas caso ocorra algum problema, você pode comparar com as listas, ajustar conforme seu sistema e instalar manualmente.
+O `install.sh` verifica as dependências de build/AUR (`base-devel`, `git`,
+`curl`), instala o helper AUR (`yay-bin`) quando necessário e tenta ser
+resiliente. O `deploy.sh` usa `rsync`, que também está na lista de pacotes.
+Caso algo falhe, compare as listas com o seu sistema e instale manualmente os
+pacotes que faltarem.
