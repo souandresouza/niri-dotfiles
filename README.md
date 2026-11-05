@@ -24,6 +24,7 @@ niri-dotfiles/
 ├── install.sh              # Instala pacotes das listas (official + AUR)
 ├── deploy.sh               # Copia configs/scripts do repo para ~/.config (sem symlinks)
 ├── check.sh                # Valida sintaxe dos scripts (.sh)
+├── LICENSE                 # Licença MIT
 ├── lista_pacman.txt        # Pacotes oficiais explícitos (pacman -Qenq)
 ├── lista_aur.txt           # Pacotes do AUR explícitos (pacman -Qemq)
 ├── servicos.txt            # Serviços systemd a habilitar
@@ -108,21 +109,32 @@ cd ~/niri-dotfiles
 ./deploy.sh
 ./deploy.sh --generate    # opcional: gera as cores a partir do wallpaper atual
 
-# 3. Dependência local: ruwall (binário, não é pacote)
-#    Baixe o binário do ruwall e coloque em $HOME/.local/bin/ruwall
-#    (usado pelo random-wallpaper.sh)
+# 3. Opcional: ruwall (paleta dinâmica de cores)
+#    ./install.sh --ruwall   # compila e instala em ~/.local/bin/ruwall
+#    Sem ele, os temas versionados continuam valendo; se tiver pywal,
+#    use PALETTE_TOOL=wal no run-scripts.sh.
 ```
 
 > Serviços específicos da máquina (ex.: `seatd.service`, `ollama.service`) podem
 > ser removidos de `servicos.txt` se não fizerem sentido no destino.
 
-Depois da instalação:
+> **cadrocfile e ruwall são opcionais.** O `install.sh` padrão não instala
+> nenhum dos dois; eles só entram com `./install.sh --cadrocfile` e
+> `./install.sh --ruwall`.
+
+Se você instalou o ruwall (ou tem o pywal), gere o tema inicial:
 
 ```sh
-# Wallpaper inicial (gera o tema wal) e regeneração dos esquemas de cor
+# Com ruwall
 ruwall -i "$HOME/.config/wallpapers/algum_wallpaper.png"
 ~/.config/scripts/run-scripts.sh    # gera cores para niri, waybar, etc.
+
+# Ou com pywal, sem o ruwall
+PALETTE_TOOL=wal ~/.config/scripts/run-scripts.sh "$HOME/.config/wallpapers/algum_wallpaper.png"
 ```
+
+Sem ruwall/pywal, os temas versionados continuam valendo e o
+`random-wallpaper.sh` ainda troca o fundo, mas não regenera as cores.
 
 ## Atualizando as listas de pacotes
 
@@ -172,9 +184,13 @@ git add lista_*.txt && git commit -s -m "Atualizar lista de pacotes"
   direto em `~/.config`, rode `./deploy.sh --pull`, revise com `git diff` e
   commite.
 
-## cadrocfile (gerenciador de arquivos)
+## cadrocfile (gerenciador de arquivos, opcional)
 
-O [cadrocfile](https://github.com/souandresouza/cadrocfile) é o meu gerenciador de arquivos GTK4 + Libadwaita. 
+O [cadrocfile](https://github.com/souandresouza/cadrocfile) é o meu gerenciador de arquivos GTK4 + Libadwaita.
+
+**É totalmente opcional.** O `install.sh` padrão não o instala. Se você não for
+usá-lo, remova ou troque o bind `Mod+E` abaixo; o restante da configuração do
+niri continua funcionando normalmente.
 
 Ele já está mapeado no `binds.kdl` com:
 
@@ -219,9 +235,14 @@ export PATH="$HOME/.local/bin:$PATH"
 ```
 
 
-## ruwall (gerador de paleta de cores)
+## ruwall (gerador de paleta de cores, opcional)
 
 O [ruwall](https://github.com/souandresouza/ruwall) é um port em Rust do `pywal`. Ele gera uma paleta de cores a partir do wallpaper e aplica em vários aplicativos (waybar, kitty, fuzzel, niri etc.).
+
+**É totalmente opcional.** O `install.sh` padrão não o instala. Sem ele, os
+arquivos de cor versionados continuam servindo de fallback. Se você quiser o
+tema dinâmico sem compilar o ruwall, use o `pywal` com
+`PALETTE_TOOL=wal ~/.config/scripts/run-scripts.sh`.
 
 É usado pelos scripts do repositório, principalmente pelo `random-wallpaper.sh`, para manter o tema dinâmico conforme o wallpaper.
 
@@ -288,3 +309,7 @@ O `install.sh` verifica as dependências de build/AUR (`base-devel`, `git`,
 resiliente. O `deploy.sh` usa `rsync`, que também está na lista de pacotes.
 Caso algo falhe, compare as listas com o seu sistema e instale manualmente os
 pacotes que faltarem.
+
+## Licença
+
+Distribuído sob a licença **MIT**. Veja [LICENSE](LICENSE).
